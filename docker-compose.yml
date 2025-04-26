@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: qodex_app
+    working_dir: /var/www/html
+    volumes:
+      - qodex_laravel:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - db
+    command: ["wait-for-db.sh", "php-fpm"]
+
+  webserver:
+    image: nginx:latest
+    container_name: nginx_webserver
+    ports:
+      - "8000:80"
+    volumes:
+      - qodex_laravel:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - app-network
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  qodex_laravel:

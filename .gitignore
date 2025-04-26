@@ -1,30 +1,38 @@
-/vendor/
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Laravel 4 specific
-bootstrap/compiled.php
-app/storage/
-
-# Laravel 5 & Lumen specific
-public/storage
-public/hot
-
-# Laravel 5 & Lumen specific with changed public path
-public_html/storage
-public_html/hot
-
-storage/*.key
+# Laravel estándar
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
 .env
+.env.*
+.phpunit.result.cache
 Homestead.yaml
 Homestead.json
-/.vagrant
-.phpunit.result.cache
+*.sqlite
 
-/public/build
-/storage/pail
-.env.backup
-.env.production
-.phpactor.json
-auth.json
+# Archivos de Laravel Idea plugin (opcional, para PHPStorm)
+.idea
+
+# Archivos de Docker
+docker/mysql/
+docker/php/wait-for-db.sh
+
+# Logs
+storage/logs/*.log
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Carpeta temporal si has copiado proyecto desde contenedor
+/src/.DS_Store
+/src/Thumbs.db
+
+# Opcional si vuelves a montar src como volumen
+src/vendor
+src/node_modules
+src/public/storage
+src/storage/*.key
+src/.env
+src/.phpunit.result.cache
