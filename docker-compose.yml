@@ -7,12 +7,15 @@ services:
     container_name: qodex_app
     working_dir: /var/www/html
     volumes:
-      - qodex_laravel:/var/www/html
+      #- qodex_laravel:/var/www/html
+      - ./src:/var/www/html
     networks:
       - app-network
     depends_on:
       - db
-    command: ["wait-for-db.sh", "php-fpm"]
+    expose:
+    - "9000" 
+    command: ["php-fpm"]
 
   webserver:
     image: nginx:latest

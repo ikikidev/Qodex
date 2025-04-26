@@ -15,15 +15,14 @@ RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
     libonig-dev \
-    netcat-openbsd \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl
+    libicu-dev \
+    nano \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl intl
 
 # Instalamos Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copiamos el script de espera de la base de datos y le damos permisos
 COPY wait-for-db.sh /usr/local/bin/wait-for-db.sh
 RUN chmod +x /usr/local/bin/wait-for-db.sh
 
-# Establecemos el directorio de trabajo
 WORKDIR /var/www/html

@@ -35,3 +35,11 @@ fix-perms:
 
 export-src:
 	docker cp qodex_app:/var/www/html ./src
+
+filament-install:
+	docker exec -it qodex_app composer require filament/filament:"^3.0"
+	docker exec -it qodex_app php artisan make:filament-user
+	docker exec -it qodex_app php artisan migrate
+
+pull-code:
+	docker cp qodex_app:/var/www/html/. ./src/
