@@ -51,3 +51,13 @@ spatie-install:
 	docker exec -it qodex_app composer require spatie/laravel-permission
 	docker exec -it qodex_app php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 	docker exec -it qodex_app php artisan migrate
+
+swagger-generate:
+	docker exec -it qodex_app php artisan l5-swagger:generate
+
+swagger-clear:
+	docker exec -it qodex_app rm -rf storage/api-docs/*
+
+swagger-refresh:
+	make swagger-clear
+	make swagger-generate

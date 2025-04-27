@@ -1,0 +1,290 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Biblioteca Pública",
+        "description": "Documentación de la API REST para gestión de autores y libros.",
+        "contact": {
+            "email": "soporte@biblioteca.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Servidor local de desarrollo"
+        }
+    ],
+    "paths": {
+        "/api/books": {
+            "get": {
+                "tags": [
+                    "Libros"
+                ],
+                "summary": "Listado de todos los libros",
+                "operationId": "9017a3fa89d6636329067c858b27a6fa",
+                "responses": {
+                    "200": {
+                        "description": "Lista de libros",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Registro de nuevo usuario (Bibliotecario o Directivo)",
+                "operationId": "6cb93c5db517a3e6e369c44ede7f22fd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "juan.perez@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "302": {
+                        "description": "Registro exitoso, redirige al login de Filament",
+                        "headers": {
+                            "Location": {
+                                "description": "Redirección al login",
+                                "schema": {
+                                    "type": "string",
+                                    "example": "/admin/login"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error de validación (faltan datos o formatos incorrectos)"
+                    }
+                }
+            }
+        },
+        "/libros": {
+            "get": {
+                "tags": [
+                    "Libros"
+                ],
+                "summary": "Obtener listado de libros",
+                "operationId": "6a23ed4b99b1c7bfc8d71eda3e67b8b1",
+                "responses": {
+                    "200": {
+                        "description": "Listado de libros obtenido exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Book"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/autores/{author}": {
+            "get": {
+                "tags": [
+                    "Autores"
+                ],
+                "summary": "Obtener detalles de un autor específico",
+                "operationId": "4ee6ea217149119a6c5807fa89618a6d",
+                "parameters": [
+                    {
+                        "name": "author",
+                        "in": "path",
+                        "description": "ID del autor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalles del autor obtenidos exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Author"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Autor no encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Author": {
+                "title": "Autor",
+                "description": "Información de un autor",
+                "properties": {
+                    "id": {
+                        "description": "ID del autor",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Nombre completo del autor",
+                        "type": "string"
+                    },
+                    "birthdate": {
+                        "description": "Fecha de nacimiento del autor",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "nationality": {
+                        "description": "Nacionalidad del autor",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Fecha de creación del registro",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Fecha de última actualización",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Book": {
+                "title": "Libro",
+                "required": [
+                    "id",
+                    "title",
+                    "isbn",
+                    "publication_year"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "isbn": {
+                        "type": "string"
+                    },
+                    "publication_year": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "Usuario",
+                "description": "Información de un usuario registrado",
+                "properties": {
+                    "id": {
+                        "description": "ID del usuario",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Nombre completo del usuario",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Dirección de correo electrónico del usuario",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "email_verified_at": {
+                        "description": "Fecha de verificación del correo electrónico",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Fecha de creación del usuario",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Fecha de última actualización del usuario",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Libros",
+            "description": "Operaciones relacionadas con los libros"
+        },
+        {
+            "name": "Autores",
+            "description": "Operaciones relacionadas con los autores"
+        },
+        {
+            "name": "Usuarios",
+            "description": "Usuarios"
+        }
+    ]
+}

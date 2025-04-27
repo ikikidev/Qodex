@@ -139,6 +139,43 @@ make artisan make:filament-user
 ```bash
 make spatie-install
 ```
+---
+
+## 📚 Documentación de la API
+
+Este proyecto incluye documentación automática de los endpoints públicos usando **Swagger** gracias a L5-Swagger.
+
+- **URL para visualizar la documentación**:  
+  👉 [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation/default)
+
+- **Endpoints documentados**:
+  - Listado de Libros públicos
+  - Detalles de Autores públicos
+  - Registro de nuevos usuarios (Bibliotecarios y Directivos)
+
+- **Modelos disponibles en la especificación**:
+  - **Libro** (`Book`)
+  - **Autor** (`Author`)
+  - **Usuario** (`User`)
+
+- **Formato de la documentación**: OpenAPI 3.0.0
+
+- **Servidor de desarrollo**: `http://localhost:8000/api`
+
+### Capturas de la documentación Swagger
+
+> ![Swagger UI Principal](./img/swagger-ui-principal.jpg)
+
+> ![Modelos en Swagger 1](./img/swagger-modelos-1.jpg)
+
+> ![Modelos en Swagger 1](./img/swagger-modelos-2.jpg)
+---
+
+> ⚡ **Nota**: Recuerda regenerar la documentación cuando modifiques las anotaciones ejecutando:
+> ```bash
+> php artisan l5-swagger:generate
+> ```
+
 
 ---
 

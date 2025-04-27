@@ -19,7 +19,19 @@ class PublicController extends Controller
     }
 
     /**
-     * Muestra el listado de libros (alternativa a la raíz).
+     * @OA\Get(
+     *     path="/libros",
+     *     summary="Obtener listado de libros",
+     *     tags={"Libros"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Listado de libros obtenido exitosamente",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Book")
+     *         )
+     *     )
+     * )
      */
     public function listBooks()
     {
@@ -29,7 +41,27 @@ class PublicController extends Controller
     }
 
     /**
-     * Muestra el detalle de un autor y sus libros.
+     * @OA\Get(
+     *     path="/autores/{author}",
+     *     summary="Obtener detalles de un autor específico",
+     *     tags={"Autores"},
+     *     @OA\Parameter(
+     *         name="author",
+     *         in="path",
+     *         required=true,
+     *         description="ID del autor",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalles del autor obtenidos exitosamente",
+     *         @OA\JsonContent(ref="#/components/schemas/Author")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Autor no encontrado"
+     *     )
+     * )
      */
     public function showAuthor(Author $author)
     {
