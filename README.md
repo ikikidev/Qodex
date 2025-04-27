@@ -1,8 +1,34 @@
 # Qodex 📚
 
 **Qodex** es una API REST desarrollada con Laravel, creada como prueba técnica para la empresa **Qaroni**.  
-Permite la gestión de libros y autores en una biblioteca digital, incluyendo autenticación por roles, exportación de estadísticas y un panel administrativo moderno con **FilamentPHP**.  
+Permite la gestión de libros y autores en una biblioteca digital, incluyendo autenticación por roles, exportación de estadísticas y un panel administrativo moderno con FilamentPHP.  
 El entorno está completamente **dockerizado** para un despliegue rápido y profesional.
+
+---
+
+## 📝 Requisitos previos
+
+Antes de comenzar, asegúreate de tener instalado:
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- [Make](https://www.gnu.org/software/make/)
+
+### ℹ️ Instalar Make en Windows
+
+En Windows, Make no viene instalado por defecto. Puedes instalarlo utilizando:
+
+- **Chocolatey**:
+  ```bash
+  choco install make
+  ```
+
+- **Scoop**:
+  ```bash
+  scoop install make
+  ```
+
+También puedes usar WSL2 si prefieres un entorno Linux completo en Windows.
 
 ---
 
@@ -15,7 +41,7 @@ El entorno está completamente **dockerizado** para un despliegue rápido y prof
 - Nginx
 - FilamentPHP
 - Laravel Excel
-- Swagger (pendiente de integración)
+- Swagger (documentación en progreso)
 
 ---
 
@@ -33,7 +59,7 @@ QODEX/
 ├── Makefile
 ├── LICENSE
 ├── README.md
-└── (Laravel instalado en volumen Docker: qodex_laravel)
+└── src/ (código Laravel local)
 ```
 
 ---
@@ -50,25 +76,20 @@ cd qodex
 ### 2. Construir y levantar los contenedores
 
 ```bash
-docker-compose up -d --build
+make up
 ```
 
 ### 3. Instalar Laravel dentro del contenedor
 
 ```bash
-docker exec -it qodex_app bash
-composer create-project laravel/laravel .
+make install
 ```
 
 ### 4. Configurar el entorno
 
-```bash
-cp .env.example .env
+Editar `.env`:
+
 ```
-
-Editar el `.env`:
-
-```env
 DB_CONNECTION=mysql
 DB_HOST=mysql_db
 DB_PORT=3306
@@ -80,74 +101,87 @@ DB_PASSWORD=secret
 Generar la clave de aplicación:
 
 ```bash
-php artisan key:generate
+make artisan key:generate
 ```
 
-### 5. Acceder a la aplicación
+### 5. Acceso a la aplicación
 
 ```text
 http://localhost:8000
 ```
 
----
+Deberías ver la página de bienvenida de Laravel.
 
-## ⚡ Automatización con Make (opcional)
+### 6. Instalación de FilamentPHP (panel de administración)
 
 ```bash
-make up           # Levanta contenedores
-make install      # Instala Laravel y configura .env
-make migrate      # Ejecuta migraciones
-make bash         # Entra al contenedor PHP
-make artisan      # Ejecuta comandos Artisan
-make fix-perms    # Repara permisos
-make export-src   # Exporta Laravel a src/
-make down         # Detiene los contenedores
-make restart      # Reinicia todo el entorno
+make filament-install
 ```
 
----
+Acceder a:
 
-## ✅ Posibles Funcionalidades previstas
+```text
+http://localhost:8000/admin
+```
 
-- Gestión de usuarios con roles diferenciados (Directivo, Bibliotecario).
-- CRUD de libros y autores (relación muchos a muchos).
-- Panel administrativo con FilamentPHP.
-- Exportación de datos en Excel.
-- Documentación de endpoints con Swagger.
-
----
-
-## 📝 Notas adicionales
-
-- Laravel está instalado en el volumen Docker `qodex_laravel`.
-- Para versionarlo localmente, ejecutar `make export-src`.
-- Uso de `make fix-perms` para evitar errores de permisos en producción.
-
----
-
-## 🛠️ Autor y créditos
-
-> Desarrollado por **ikikidev** como parte del proceso técnico de selección para Qaroni.
-
----
-
-🔐 Autenticación
-La gestión de usuarios autenticados se maneja mediante FilamentPHP. Puedes crear usuarios administradores mediante:
+Para crear un usuario administrador:
 
 ```bash
 make artisan make:filament-user
 ```
 
-Acceso al panel: http://localhost:8000/admin/login
+### 7. Instalación de Spatie Laravel-Permission (gestión de roles)
+
+```bash
+make spatie-install
+```
 
 ---
 
-✅ Estado actual del proyecto
+## ⚡ Automatización con Make
 
-- [x] Docker funcionando con Laravel
-- [x] Panel Filament operativo
-- [x] Migraciones aplicadas (Users, Authors, Books)
-- [x] Recursos Filament de Author y Book funcionando
-- [ ] Roles y permisos por perfil
-- [ ] Exportación a Excel
-- [ ] Documentación Swagger completa
+```text
+make up                # Levanta los contenedores\make install           # Instala Laravel desde cero
+make migrate           # Ejecuta las migraciones
+make seed              # Ejecuta los seeders
+make down              # Detiene y elimina los contenedores
+make restart           # Reinicia el entorno
+make artisan <cmd>     # Ejecuta comandos artisan
+make bash              # Accede al contenedor
+make logs              # Ver los logs del contenedor
+make fix-perms         # Repara permisos en Laravel
+make export-src        # Copia el código del volumen a ./src
+make pull-code         # Copia el código desde ./src al volumen Docker
+make filament-install  # Instala FilamentPHP
+make spatie-install    # Instala Spatie Laravel-Permission
+make refresh           # Ejecuta fresh migrations + seeders
+```
+
+---
+
+## ✅ Funcionalidades previstas
+
+- Gestión de usuarios con roles diferenciados (Directivo, Bibliotecario, Anónimo).
+- CRUD de libros y autores (relación muchos a muchos).
+- Panel administrativo con FilamentPHP.
+- Exportación de datos en Excel.
+- Documentación de endpoints con Swagger.
+- Sistema de autenticación y registro de usuarios.
+
+---
+
+## 📋 Notas adicionales
+
+- Laravel vive en el volumen `qodex_laravel` pero el código se sincroniza con `./src` para poder editar localmente.
+- Utiliza `make export-src` para copiar el contenido del volumen Docker a `./src`.
+- Utiliza `make pull-code` para aplicar cambios hechos en `./src` al volumen.
+- Usa `make fix-perms` si encuentras errores de permisos.
+
+---
+
+## 💪 Autor y créditos
+
+Desarrollado por **ikikidev** como parte del proceso de selección técnica para **Qaroni**.
+
+---
+

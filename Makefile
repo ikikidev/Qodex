@@ -1,4 +1,4 @@
-.PHONY: up install migrate seed down restart artisan bash logs fix-perms export-src
+.PHONY: up install migrate seed down restart artisan bash logs fix-perms export-src filament-install pull-code spatie-install refresh
 
 up:
 	docker-compose up -d --build
@@ -13,6 +13,9 @@ migrate:
 
 seed:
 	docker exec -it qodex_app php artisan db:seed
+
+refresh:
+	docker exec -it qodex_app php artisan migrate:fresh --seed
 
 down:
 	docker-compose down
@@ -43,3 +46,8 @@ filament-install:
 
 pull-code:
 	docker cp qodex_app:/var/www/html/. ./src/
+
+spatie-install:
+	docker exec -it qodex_app composer require spatie/laravel-permission
+	docker exec -it qodex_app php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+	docker exec -it qodex_app php artisan migrate
