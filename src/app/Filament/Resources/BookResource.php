@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Resources\BookResource\RelationManagers\AuthorsRelationManager;
 use App\Filament\Resources\BookResource\Pages;
+use Illuminate\Support\Facades\Auth;
 
 class BookResource extends Resource
 {
@@ -57,11 +58,18 @@ class BookResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Fecha de creación')->since(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->authorize(fn ($record) => Auth::check() && Auth::user()?->can('update', $record)),
+                Tables\Actions\DeleteAction::make()
+                    ->authorize(fn ($record) => Auth::check() && Auth::user()?->can('delete', $record)),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->authorize(fn () => Auth::check() && Auth::user()?->can('delete', Book::class)),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->authorize(fn () => Auth::check() && Auth::user()?->can('create', Book::class)),
             ]);
     }
 

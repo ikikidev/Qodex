@@ -4,6 +4,10 @@
 Permite la gestión de libros y autores en una biblioteca digital, incluyendo autenticación por roles, exportación de estadísticas y un panel administrativo moderno con FilamentPHP.  
 El entorno está completamente **dockerizado** para un despliegue rápido y profesional.
 
+✅ Por simplicidad, todos los usuarios que se registren desde el formulario serán bibliotecarios.
+✅ Solo un admin (ya dentro de Filament) podrá cambiar manualmente a "directivo" si es necesario.
+✅ Así evitamos riesgos de que cualquier persona se autoproclame directivo desde fuera.
+
 ---
 
 ## 📝 Requisitos previos

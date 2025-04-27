@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Table;
 
 class AuthorResource extends Resource
@@ -47,11 +48,18 @@ class AuthorResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')->label('Fecha de creación')->since(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->authorize(fn ($record) => Auth::check() && Auth::user()?->can('update', $record)),
+                Tables\Actions\DeleteAction::make()
+                    ->authorize(fn ($record) => Auth::check() && Auth::user()?->can('delete', $record)),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->authorize(fn () => Auth::check() && Auth::user()?->can('delete', Author::class)),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->authorize(fn () => Auth::user()?->can('create', Author::class) ?? false),
             ]);
     }
 
