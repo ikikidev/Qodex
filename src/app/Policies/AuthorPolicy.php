@@ -10,12 +10,12 @@ class AuthorPolicy
     /**
      * Permitir ver autores a cualquiera (registrado o anónimo).
      */
-    public function viewAny(?User $user): bool
+    public function viewAny(User $user = null): bool
     {
         return true;
     }
 
-    public function view(?User $user, Author $author): bool
+    public function view(User $user = null, Author $author): bool
     {
         return true;
     }
@@ -25,7 +25,7 @@ class AuthorPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['directivo', 'bibliotecario']);
+        return $user->hasRole(['directivo', 'Bibliotecario']);
     }
 
     /**
@@ -33,7 +33,7 @@ class AuthorPolicy
      */
     public function update(User $user, Author $author): bool
     {
-        return $user->hasRole(['directivo', 'bibliotecario']);
+        return $user->hasRole(['directivo', 'Bibliotecario']);
     }
 
     /**
@@ -41,6 +41,6 @@ class AuthorPolicy
      */
     public function delete(User $user, Author $author): bool
     {
-        return $user->hasRole(['directivo', 'bibliotecario']);
+        return $user->hasRole(['directivo', 'Bibliotecario']);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Author;
-use Illuminate\Http\Request;
 
 class PublicController extends Controller
 {
@@ -21,15 +20,11 @@ class PublicController extends Controller
     /**
      * @OA\Get(
      *     path="/libros",
-     *     summary="Obtener listado de libros",
      *     tags={"Libros"},
+     *     summary="Listado de todos los libros disponibles",
      *     @OA\Response(
      *         response=200,
-     *         description="Listado de libros obtenido exitosamente",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Book")
-     *         )
+     *         description="Lista de libros obtenida exitosamente."
      *     )
      * )
      */
@@ -43,23 +38,22 @@ class PublicController extends Controller
     /**
      * @OA\Get(
      *     path="/autores/{author}",
-     *     summary="Obtener detalles de un autor específico",
      *     tags={"Autores"},
+     *     summary="Muestra los detalles de un autor específico",
      *     @OA\Parameter(
      *         name="author",
      *         in="path",
      *         required=true,
      *         description="ID del autor",
-     *         @OA\Schema(type="integer", example=1)
+     *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Detalles del autor obtenidos exitosamente",
-     *         @OA\JsonContent(ref="#/components/schemas/Author")
+     *         description="Detalles del autor obtenidos exitosamente."
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Autor no encontrado"
+     *         description="Autor no encontrado."
      *     )
      * )
      */

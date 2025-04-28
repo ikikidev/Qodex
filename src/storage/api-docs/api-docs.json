@@ -14,31 +14,118 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000/api",
+            "url": "http://localhost:8000",
             "description": "Servidor local de desarrollo"
         }
     ],
     "paths": {
-        "/api/books": {
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "Registro de nuevos usuarios",
+                "operationId": "0b5e98db9844fcec146cc2029ff2640b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Juan Pérez"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "juan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuario registrado correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuario registrado correctamente"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Datos inválidos"
+                    }
+                }
+            }
+        },
+        "/api/v1/authors/{author}": {
+            "get": {
+                "tags": [
+                    "Autores"
+                ],
+                "summary": "Mostrar detalles de un autor",
+                "operationId": "b0f2baefd5fe0363db99a0f93a104f1f",
+                "parameters": [
+                    {
+                        "name": "author",
+                        "in": "path",
+                        "description": "ID del autor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalles del autor obtenidos correctamente"
+                    },
+                    "404": {
+                        "description": "Autor no encontrado"
+                    }
+                }
+            }
+        },
+        "/api/v1/books": {
             "get": {
                 "tags": [
                     "Libros"
                 ],
                 "summary": "Listado de todos los libros",
-                "operationId": "9017a3fa89d6636329067c858b27a6fa",
+                "operationId": "ab6891af84b2f0a68a33cdfe8324ce98",
                 "responses": {
                     "200": {
-                        "description": "Lista de libros",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Book"
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Listado obtenido correctamente"
                     }
                 }
             }
@@ -111,21 +198,11 @@
                 "tags": [
                     "Libros"
                 ],
-                "summary": "Obtener listado de libros",
+                "summary": "Listado de todos los libros disponibles",
                 "operationId": "6a23ed4b99b1c7bfc8d71eda3e67b8b1",
                 "responses": {
                     "200": {
-                        "description": "Listado de libros obtenido exitosamente",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Book"
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Lista de libros obtenida exitosamente."
                     }
                 }
             }
@@ -135,7 +212,7 @@
                 "tags": [
                     "Autores"
                 ],
-                "summary": "Obtener detalles de un autor específico",
+                "summary": "Muestra los detalles de un autor específico",
                 "operationId": "4ee6ea217149119a6c5807fa89618a6d",
                 "parameters": [
                     {
@@ -144,24 +221,16 @@
                         "description": "ID del autor",
                         "required": true,
                         "schema": {
-                            "type": "integer",
-                            "example": 1
+                            "type": "integer"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Detalles del autor obtenidos exitosamente",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Author"
-                                }
-                            }
-                        }
+                        "description": "Detalles del autor obtenidos exitosamente."
                     },
                     "404": {
-                        "description": "Autor no encontrado"
+                        "description": "Autor no encontrado."
                     }
                 }
             }

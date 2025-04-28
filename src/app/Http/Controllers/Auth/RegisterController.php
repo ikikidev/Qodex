@@ -60,8 +60,8 @@ class RegisterController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        // Asignar rol "bibliotecario" por defecto
-        $user->assignRole('bibliotecario');
+        // Asignar rol "Bibliotecario" por defecto
+        $user->assignRole('Bibliotecario');
 
         // Enviar correo de bienvenida
         Mail::to($user->email)->send(new WelcomeMail($user));

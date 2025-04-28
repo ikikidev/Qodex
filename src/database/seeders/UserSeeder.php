@@ -14,14 +14,19 @@ class UserSeeder extends Seeder
             'name' => 'Directivo de prueba',
             'email' => 'directivo@qodex.local',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
         ]);
-        $directivo->assignRole('directivo');
+
+        $directivo->assignRoleAndSync('Directivo');
 
         $bibliotecario = User::create([
             'name' => 'Bibliotecario de prueba',
             'email' => 'bibliotecario@qodex.local',
             'password' => Hash::make('password'),
+            'email_verified_at' => now(),
         ]);
-        $bibliotecario->assignRole('bibliotecario');
+
+        $bibliotecario->assignRoleAndSync('Bibliotecario');
+
     }
 }

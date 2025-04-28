@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Filament\Panel;
+
 
 /**
  * @OA\Schema(
@@ -20,7 +23,7 @@ use Spatie\Permission\Traits\HasRoles;
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Fecha de última actualización del usuario")
  * )
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable, HasRoles;
 
@@ -29,10 +32,29 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'email_verified_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->hasAnyRole(['Directivo', 'Bibliotecario']);
+    }
+
+    public function assignRoleAndSync(string $role): void
+    {
+        if ($this->roles()->exists()) {
+            $this->syncRoles([$role]);
+        } else {
+            $this->assignRole($role);
+        }
+
+        $this->update([
+            'role' => $role,
+        ]);
+    }
 }

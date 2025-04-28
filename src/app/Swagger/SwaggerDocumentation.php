@@ -5,7 +5,7 @@ namespace App\Swagger;
 /**
  * @OA\OpenApi(
  *     @OA\Server(
- *         url="http://localhost:8000/api",
+ *         url="http://localhost:8000",
  *         description="Servidor local de desarrollo"
  *     ),
  *     @OA\Info(
