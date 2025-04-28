@@ -25,7 +25,7 @@ class AuthorPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['directivo', 'Bibliotecario']);
+        return $user->hasRole(['Directivo', 'Bibliotecario']);
     }
 
     /**
@@ -33,14 +33,19 @@ class AuthorPolicy
      */
     public function update(User $user, Author $author): bool
     {
-        return $user->hasRole(['directivo', 'Bibliotecario']);
+        return $user->hasRole(['Directivo', 'Bibliotecario']);
     }
 
     /**
      * Solo usuarios registrados pueden borrar autores.
      */
-    public function delete(User $user, Author $author): bool
+    public function delete(User $user, ?Author $author = null): bool
     {
-        return $user->hasRole(['directivo', 'Bibliotecario']);
+        return $user->hasAnyRole(['Directivo', 'Bibliotecario']);
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->hasAnyRole(['Directivo', 'Bibliotecario']);
     }
 }

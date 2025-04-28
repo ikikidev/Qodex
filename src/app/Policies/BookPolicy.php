@@ -39,8 +39,13 @@ class BookPolicy
     /**
      * Solo usuarios registrados pueden borrar libros.
      */
-    public function delete(User $user, Book $book): bool
+    public function delete(User $user, ?Book $book = null): bool
     {
-        return $user->hasRole(['Directivo', 'Bibliotecario']);
+        return $user->hasAnyRole(['Directivo', 'Bibliotecario']);
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->hasAnyRole(['Directivo', 'Bibliotecario']);
     }
 }
