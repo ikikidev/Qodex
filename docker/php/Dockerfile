@@ -17,7 +17,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libicu-dev \
     nano \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl intl
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl intl gd
 
 # Instalamos Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

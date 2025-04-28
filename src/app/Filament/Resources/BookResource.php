@@ -7,10 +7,14 @@ use App\Models\Book;
 use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Exports\ResumenExport;
 use Filament\Resources\Resource;
-use App\Filament\Resources\BookResource\RelationManagers\AuthorsRelationManager;
-use App\Filament\Resources\BookResource\Pages;
+use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Filament\Resources\BookResource\Pages;
+use App\Filament\Resources\BookResource\RelationManagers\AuthorsRelationManager;
+
 
 class BookResource extends Resource
 {
@@ -70,6 +74,15 @@ class BookResource extends Resource
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->authorize(fn () => Auth::check() && Auth::user()?->can('create', Book::class)),
+
+                    Action::make('exportResumen')
+                    ->label('Export Summary')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('primary')
+                    ->visible(fn () => Auth::user()?->hasRole('Directivo'))
+                    ->action(function () {
+                        return Excel::download(new ResumenExport, 'resumen_qodex.xlsx');
+                    }),
             ]);
     }
 

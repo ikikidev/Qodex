@@ -1,11 +1,23 @@
-# Qodex 📚
+# 📚 Qodex 
+
+<div align="center">
+
+![Laravel](https://img.shields.io/badge/Laravel-10-E62314?logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8\.2-E83715?logo=php)
+![Dockerized](https://img.shields.io/badge/Dockerized-Yes-EA4C15?logo=docker)
+![Makefile](https://img.shields.io/badge/Automation-Makefile-EC6116)
+![FilamentPHP](https://img.shields.io/badge/FilamentPHP-3\.0-ED7517?logo=filament)
+![Swagger](https://img.shields.io/badge/Swagger-Documentation-EF8A17?logo=swagger)
+![License](https://img.shields.io/badge/License-MIT-F19E18)
+
+</div>
 
 **Qodex** es una API REST desarrollada con Laravel, creada como prueba técnica para la empresa **Qaroni**.  
 Permite la gestión de libros y autores en una biblioteca digital, incluyendo autenticación por roles, exportación de estadísticas y un panel administrativo moderno con FilamentPHP.  
 El entorno está completamente **dockerizado** para un despliegue rápido y profesional.
 
 ✅ Por simplicidad, todos los usuarios que se registren desde el formulario serán bibliotecarios.
-✅ Solo un admin (ya dentro de Filament) podrá cambiar manualmente a "directivo" si es necesario.
+✅ Solo un admin podrá cambiar manualmente a "directivo" si es necesario.
 ✅ Así evitamos riesgos de que cualquier persona se autoproclame directivo desde fuera.
 
 ---
@@ -182,7 +194,8 @@ Este proyecto incluye documentación automática de los endpoints públicos usan
 ## ⚡ Automatización con Make
 
 ```text
-make up                # Levanta los contenedores\make install           # Instala Laravel desde cero
+make up                # Levanta los contenedores
+make install           # Instala Laravel desde cero
 make migrate           # Ejecuta las migraciones
 make seed              # Ejecuta los seeders
 make down              # Detiene y elimina los contenedores
@@ -197,17 +210,61 @@ make filament-install  # Instala FilamentPHP
 make spatie-install    # Instala Spatie Laravel-Permission
 make refresh           # Ejecuta fresh migrations + seeders
 ```
+---
+## 🛠️ Funcionalidades implementadas en la prueba técnica
+
+- **Entorno Dockerizado:** configuración completa con nginx, php-fpm, mysql y volumenes sincronizados.
+
+- **Instalación automatizada con Makefile:** levantar, instalar y administrar el proyecto con simples comandos make.
+
+- **Backend en Laravel 10:** desarrollo desde cero.
+
+- **Autenticación completa:**
+
+  - Registro y login de usuarios.
+
+  - Hash de contraseñas seguro.
+
+- **Roles de usuarios con Spatie Laravel-Permission:**
+
+  - Roles: Directivo, Bibliotecario.
+
+  - Asignación automática de rol Bibliotecario al registrarse.
+
+- **Panel de Administración:**
+
+  - Implementado usando FilamentPHP.
+
+  - Acceso controlado por políticas de autorización.
+
+- **Control de Acceso con Policies:**
+
+  - Restringido crear/editar/borrar libros y autores según rol.
+
+- **CRUD completo de:**
+
+  - Libros.
+
+  - Autores (relación muchos a muchos).
+
+- **Sistema de seeders:**
+
+  - Generación automática de libros con autores aleatorios sin duplicados.
+
+- **Documentación de la API:**
+
+  - Documentada con Swagger y accesible desde el navegador.
 
 ---
 
 ## ✅ Funcionalidades previstas
 
-- Gestión de usuarios con roles diferenciados (Directivo, Bibliotecario, Anónimo).
-- CRUD de libros y autores (relación muchos a muchos).
-- Panel administrativo con FilamentPHP.
-- Exportación de datos en Excel.
-- Documentación de endpoints con Swagger.
-- Sistema de autenticación y registro de usuarios.
+- [x] Gestión de usuarios con roles diferenciados (Directivo, Bibliotecario, Anónimo).
+- [x] CRUD de libros y autores (relación muchos a muchos).
+- [x] Panel administrativo con FilamentPHP.
+- [x] Exportación de datos en Excel.
+- [x] Documentación de endpoints con Swagger.
+- [x] Sistema de autenticación y registro de usuarios.
 
 ---
 
@@ -220,9 +277,124 @@ make refresh           # Ejecuta fresh migrations + seeders
 
 ---
 
+## 🧪 Cómo probar rápidamente
+
+### 1. Levantar el entorno
+
+```bash
+make up
+make install
+make migrate
+make seed
+```
+
+### 2. Acceder a la app
+Ir a http://localhost:8000.
+
+![](img/publico.png)
+![](img/autor-publico.png)
+
+> Como usuario anonimo o no registrado puedes ver el listado de libros y autores de la biblioteca
+
+### 3. Registrarte como nuevo usuario
+Usa el formulario de registro. Se te asignará automáticamente el rol de Bibliotecario.
+
+### 4. Acceder al panel de administración
+Ir a http://localhost:8000/admin y autenticarte.
+
+### 5. Gestionar datos
+
+- Crear, editar o eliminar Autores.
+![](img/listado-autores.png)
+![](img/create-autor.png)
+![](img/editar-autor.png)
+
+- Crear, editar o eliminar Libros.
+![](img/listado-libros.png)
+![](img/crear-libro.png)
+![](img/editar-libro.png)
+
+- Ver relaciones entre autores y libros.
+
+### 6. Probar permisos
+
+- Solo usuarios con rol Directivo o Bibliotecario pueden gestionar autores/libros.
+- Anónimos no pueden acceder al panel de administración.
+
+### 7. Consultar la API documentada
+
+Ir a http://localhost:8000/api/documentation.
+
+---
+
+## 📊 Exportación de resumen de datos a Excel
+
+**Qodex** incluye un sistema de exportación a Excel para que los usuarios **Directivos** puedan descargar un resumen de:
+
+- Total de libros registrados.
+- Total de autores registrados.
+- Detalle de libros por autor.
+
+La exportación se realiza en formato `.xlsx` compatible con Microsoft Excel, LibreOffice o Google Sheets.
+
+---
+
+## 💪 Requisitos adicionales para la exportación
+
+El sistema de exportación usa el paquete [Maatwebsite Excel](https://laravel-excel.com/).
+
+Ya está incluido en el proyecto, **pero necesitas tener instalada la extensión PHP GD** en tu contenedor de Docker.
+
+### ¿Cómo lo instalamos?
+
+La extensión **gd** ya se instala automáticamente al construir el contenedor PHP gracias a esta configuración en el `Dockerfile`:
+
+```dockerfile
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd
+```
+
+No necesitas hacer nada extra si sigues los pasos de "Levantar el entorno".
+
+---
+
+## 🚀 ¿Cómo usar la exportación?
+
+1. Inicia sesión como usuario **Directivo**.
+2. Ve al panel de **Libros** en el admin de Filament.
+3. Arriba a la derecha verás un botón **Exportar resumen**.
+4. Al hacer clic, se descargará un archivo `.xlsx` con los datos.
+
+> Solo los usuarios con rol **Directivo** pueden ver y usar el botón de exportación.
+
+---
+
+## 👍 Estado actual
+
+- [x] Integración de exportación de datos en Excel terminada.
+- [x] Acceso restringido solo a Directivos.
+- [x] Resumen automático de libros y autores.
+- [x] Instalación documentada en el README.
+
+---
+
+✨ **Todo listo para probarlo!**
+
+![Export summary](img/export-summary.png)
+
+![excel](img/excel.png)
+
+> El rol de bibliotecario no tiene acceso a la exportacion del resumen
+
+![Rol de bibliotecario resumen](img/bibliotecario-no-resumen.png)
+---
+
 ## 💪 Autor y créditos
 
 Desarrollado por **ikikidev** como parte del proceso de selección técnica para **Qaroni**.
 
 ---
-
